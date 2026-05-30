@@ -1,0 +1,13 @@
+# template site to site wg.conf
+[Interface]
+Address = ${WG_ADDRESS}
+PrivateKey = ${WG_PRIVATE_KEY} 
+ListenPort = ${WG_PORT}
+PostUp = nft add table ip wireguard; nft add chain ip wireguard wireguard_chain {type nat hook postrouting priority srcnat\; policy accept\;}; nft add rule ip wireguard wireguard_chain counter packets 0 bytes 0 masquerade; nft add table ip6 wireguard; nft add chain ip6 wireguard wireguard_chain {type nat hook postrouting priority srcnat\; policy accept\;}; nft add rule ip6 wireguard wireguard_chain counter packets 0 bytes 0 masquerade
+PostDown = nft delete table ip wireguard; nft delete table ip6 wireguard
+
+[Peer]
+PublicKey = ${PEER_PUBLIC_KEY}
+Endpoint = ${PEER_ENDPOINT}
+AllowedIPs = ${PEER_ALLOWED_IPS}
+PersistentKeepalive = 30
